@@ -1,0 +1,263 @@
+{% extends 'home.html' %}
+
+
+{% block title %}
+IMPACT
+{% endblock %}
+
+
+{% block content  %}
+<style>
+    .impact_text{
+        text-align: justify;
+        text-justify: inter-word;
+        color: rgba(255,255,255,.5);
+    }
+</style>
+<nav class="navbar navbar-expand-md bg-dark navbar-dark">
+    <a class="navbar-brand" href="{{ url_for('impact') }}">
+        <img src="{{ url_for('static', filename='IMPACT.png') }}" alt="Logo" style="width:90px;">
+    </a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="collapsibleNavbar">
+        <ul class="navbar-nav">
+            <li class="nav-item">
+                <a class="nav-link" href="{{url_for('query')}}">Make a query</a>
+            </li>
+        </ul>
+    </div>  
+</nav>
+<div class="container" >
+
+    <h1 id="oos" class="impact_text">Out of scope</h1>
+    <p class="impact_text">Important! a query do not search over the following Journals & Magazines.</p>
+    	<div class="row">
+        	<div class="col text-center">
+   			 <button type="button" class="btn btn-dark" style="color: rgba(255,255,255,.5);" data-toggle="collapse" data-target="#demo">Take a look</button>
+		</div>
+   	</div>
+    <div id="demo" class="collapse ">
+        <br>
+        {% if oos %}
+            <h3 class="impact_text">Total out of scope = {{oos|count}} Journals & Magazines</h3>
+            {% for x in oos %}
+            <div class="card" style="margin-top: 15px;">
+                <div class="card-body">
+                <a target="_blank" href="{{x[1]}}" class="card-title" style="color: #060; font-size: large; font-weight: bold;">{{x[0]}}</a>
+                </div>
+            </div>
+            {% endfor %}
+        {% endif %}
+    </div>
+    <hr>
+    <br>
+    <h1 id="donate1" class="impact_text">Donate</h1>
+    <p class="impact_text">If you think this project is useful donate to keep it alive!</p>
+    <div class="row">
+        <div class="col text-center">
+            <a href="{{ url_for('impact', scroll='donate', donation='1.00') }}"  class="btn btn-dark" style="color: rgba(255,255,255,.5);" >$ 1.00 USD</a>
+            <a href="{{ url_for('impact', scroll='donate', donation='25.00') }}"  class="btn btn-dark" style="color: rgba(255,255,255,.5);" >$ 25.00 USD</a>
+            <a href="{{ url_for('impact', scroll='donate', donation='50.00') }}"  class="btn btn-dark" style="color: rgba(255,255,255,.5);" >$ 50.00 USD</a>
+            <a href="{{ url_for('impact', scroll='donate', donation='100.00') }}"  class="btn btn-dark" style="color: rgba(255,255,255,.5);" >$ 100.00 USD</a>
+        </div>
+    </div>
+    <div id="demo1" class="collapse ">
+        <br>
+        <h3 id="donate" class="impact_text">Chosen donation = $ {{donation}} USD</h3>
+        <div class="card" style="margin-top: 15px;">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col text-center">
+                        <br>
+                        <div id="paypal-button-container" ></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <hr>
+    <br>
+    <h1 id="bot" class="impact_text">IMPACT Telegram bot</h1>
+    <p class="impact_text">Some IMPACT status data can be consulted by a Telegram bot <a class="impact_text" style="color: #3a6d99;" target="_blank" href="http://t.me/impact_ieee_9_bot">@impact_ieee_9_bot</a> try the following.</p>
+    <div class="card" style="margin-top: 15px;">
+        <div class="card-body">
+            <p style="color: #3a6d99; background-color: white; "><b style="margin-left: 5%;margin-right: 5%;">/ar</b># shows total count of IMPACT's IEEE Journals & Magazines Articles mapped</p>
+            <br>
+            <p style="color: #3a6d99; background-color: white; "><b style="margin-left: 5%;margin-right: 5%;">/oos</b># shows total count about the IMPACT's out of scope Journals and Magazines</p>
+            <br>
+            <p style="color: #3a6d99; background-color: white; "><b style="margin-left: 5%;margin-right: 5%;">/last</b># shows the last time data was collected from the IEEE website</p>
+        </div>
+    </div>
+    
+    <br>
+    <br>
+    <br>
+    <hr>
+</div>
+<footer style="position: static; bottom: 0; width: 100%;">
+	<div class="container">
+		<p class="impact_text" style="text-align: center;">
+		
+		Copyright 2020 IMPACT
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+	<a class="impact_text" target="_blank" href="http://www.apache.org/licenses/LICENSE-2.0">
+	http://www.apache.org/licenses/LICENSE-2.0
+	</a>
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+		
+		</p>
+	</div>
+	<div class="container">
+		<div class="row">
+		<div class="container" >
+			<h1 id="history" class="impact_text" style="text-align: center;">History</h1>
+    <p class="impact_text" style="text-align: center;">This proyect grow from an academic exercise about the apply multiprocess programming to
+        computational tasks like web scraping so the result was <i>IMPACT</i> a related works search tool by a reference
+        (autor, title and year) for each Article in <a class="impact_text" target="_blank" href="https://ieeexplore.ieee.org/browse/periodicals/title?rowsPerPage=100&pageNumber=1">Institute of Electrical and Electronics Engineers (IEEE) Journals & Magazines</a>
+         giving to the user the power of looking for which works use an especific reference.</p>
+    
+    <br>
+
+		</div>
+		<div class="container" >
+			<h1 id="contact" class="impact_text" style="text-align: center;">Contact</h1>
+    <p class="impact_text" style="text-align: center;">Looking for more personalized service? Give your email address to get contact by IMPACT project owner.</p>
+    <div class="modal fade" id="exampleModal1" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header" style="background-color: #343a40!important;">
+            <h5 style="color: rgba(255,255,255,.5);" class="modal-title" id="exampleModalLabel">Contact</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            </div>
+            <div class="modal-body">
+                <p style="color: black;">Give your email address to get contact by IMPACT project owner.</p>
+                {% from 'macro.html' import mostrar_fields %}
+                <form  method="POST" >
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    {{ mostrar_fields(subscribe_form.email, class='form-control') }}
+                    {{ subscribe_form.honeypot }}
+                    <div class="container">
+                        <div class="row">
+                            <div class="col text-center">
+                    <button  onclick="loading();" class="btn btn-dark"  type="submit"  style="width: 200px; color: rgba(255,255,255,.5);">Send email address</button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer"  style="background-color: #343a40!important;">
+            <button type="button" class="btn btn-dark" style="color: rgba(255,255,255,.5);" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+        </div>
+    </div>
+    <div class="row">
+    	<div class="col text-center">
+    <button  id="myInput1" type="button" class="btn btn-dark" style="color: rgba(255,255,255,.5);" data-toggle="modal" data-target="#exampleModal1">
+    Send email address
+    </button>
+    	</div>
+    </div>
+		</div>	
+		</div>
+	</div>
+</footer>
+<br>
+<br>
+<br>
+<hr>
+<!-- Include the PayPal JavaScript SDK -->
+<script src="https://www.paypal.com/sdk/js?client-id=AXqQydFlKAysx3O0dIUGARhj8yxAlw_-SaYrKNI6T6aXdw-7q8l_sPaLPzIO6N-J9M5VYkeWJyUdYesq&currency=USD"></script>
+<script>
+    // Render the PayPal button into #paypal-button-container
+    paypal.Buttons({
+        // Set up the transaction
+        createOrder: function(data, actions) {
+            return actions.order.create({
+                purchase_units: [{
+                    amount: {
+                        value: '{{donation}}'
+                    }
+                }]
+            });
+        },
+        // Finalize the transaction
+        onApprove: function(data, actions) {
+            return actions.order.capture().then(function(details) {
+                var generalStatus = details.status;
+                var paymentStatus = details.purchase_units[0].payments.captures[0].status;
+                if (paymentStatus.localeCompare("COMPLETED")===0 & generalStatus.localeCompare("COMPLETED")===0) {             
+                    alert('¡Successful donation. Thank you very much '+details.payer.name.given_name+' '+details.payer.name.surname+'!');
+                } else {
+                    alert('Fail donation!');
+                    location.replace("{{url_for('impact', scroll='donate', donation= donation )}}")
+                }
+            });
+        },
+        style: {
+            color:  'blue',
+            shape:  'pill',
+            label:  'pay',
+            height: 40
+        }
+    }).render('#paypal-button-container');
+</script>
+{% if mod %}
+<script type="text/javascript">
+    $('#exampleModal1').modal('show')
+</script>    
+{% endif %}
+<script type="text/javascript">
+    $('#exampleModal1').on('shown.bs.modal', function () {
+        $('#myInput1').trigger('focus')
+        })
+</script>
+<script type="text/javascript">
+    function loading(){
+        $("#loading").show();
+        $("#content").hide(); 
+    }
+</script>
+<script type="text/javascript">
+document.addEventListener("readystatechange", function(){
+    if(document.readyState === "loading" | document.readyState === "interactive") {
+    $("#loading").show();
+    $("#content").hide();
+    }else{
+    $("#loading").hide();
+    $("#content").show();
+    }
+});
+</script>
+{% if scroll %}
+<script>
+    document.location.hash = '#' + "{{scroll}}";
+</script>
+{% endif %}
+{% if scroll == 'oos' %}
+<script>
+    $('#demo').collapse({
+toggle: true
+})
+</script>
+{% endif %}
+{% if donation == '1.00' or donation == '25.00' or donation == '50.00' or donation == '100.00'%}
+<script>
+    $('#demo1').collapse({
+toggle: true
+})
+</script>
+{% endif %}
+{% endblock %}

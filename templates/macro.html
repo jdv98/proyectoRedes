@@ -1,0 +1,19 @@
+{% macro mostrar_fields(field) %}
+    <div style="display: flex; flex-direction: column; margin-top: 15px; margin-left: 10%; margin-right: 10%;">
+        <div  style="text-align: left; font-size: large;font-weight: bold; color: black;">
+            <td>{{ field.label }}</td>
+        
+        </div>
+        <div >
+            <dd>{{ field(**kwargs)|safe }}</dd>
+        </div>
+        
+    </div>  
+    {% if  field.errors %}
+        <ul>
+            {% for error in field.errors %}
+                <li style="color: red;">{{ error }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+{% endmacro %}

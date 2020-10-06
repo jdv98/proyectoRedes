@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Bootstrap CSS CDN -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+    <link rel="icon" href="{{ url_for('static', filename='IMPACT.png') }}">
+    <title>
+        {% block title %}
+        {% endblock  %}
+    </title>
+    
+    <style>
+        .loader {
+            background-color: goldenrod;
+            border: 16px solid goldenrod;
+            border-radius: 50%;
+            /*border-top: 16px solid black;*/
+            border-top-left-radius: 2%;
+            border-top-right-radius: 0%;
+            width: 50px;
+            height: 150px;
+            -webkit-animation: spin 3s linear infinite; /* Safari */
+            animation: spin 3s linear infinite;
+        }
+        
+        /* Safari */
+        @-webkit-keyframes spin {
+          0% { -webkit-transform: rotate(0deg); }
+          100% { -webkit-transform: rotate(360deg); }
+        }
+        
+        @keyframes spin {
+          0% { transform: rotate(0deg); }
+          100% { transform: rotate(360deg); }
+        }
+
+        .center {
+        margin: 0;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        -ms-transform: translate(-50%, -50%);
+        transform: translate(-50%, -50%);
+        }
+        div#loading {
+        display: none;
+        cursor: wait;
+        }
+    </style>
+    <style>
+        a.card-text.visit:link {
+        color: black;
+        }
+        a.card-text.visit:visited{
+            color: darkmagenta;
+        }
+    </style>
+    <style>
+    #hideMe {
+        -moz-animation: cssAnimation 0s ease-in 5s forwards;
+        /* Firefox */
+        -webkit-animation: cssAnimation 0s ease-in 5s forwards;
+        /* Safari and Chrome */
+        -o-animation: cssAnimation 0s ease-in 5s forwards;
+        /* Opera */
+        animation: cssAnimation 0s ease-in 5s forwards;
+        -webkit-animation-fill-mode: forwards;
+        animation-fill-mode: forwards;
+    }
+    @keyframes cssAnimation {
+        to {
+            width:0;
+            height:0;
+            overflow:hidden;
+        }
+    }
+    @-webkit-keyframes cssAnimation {
+        to {
+            width:0;
+            height:0;
+            visibility:hidden;
+        }
+    }
+    </style>
+</head>
+
+<body style="background-color: #343a40!important;">
+{% with messages = get_flashed_messages()  %}
+    {% if messages %}
+        {% for message in messages  %}
+        <div id='hideMe'>
+            <div  class="alert alert-success">{{ message }}</div>
+        </div>
+        {% endfor %}
+    {% endif %}
+{% endwith   %}
+<div id="loading" class="center">
+    <div class="loader"></div>
+</div>
+
+<div id="content">
+    {% block content %}
+    {% endblock content %}
+</div>
+
+{% if no_reload %}
+<script type="text/javascript">
+    window.onbeforeunload = function() {
+        return "Dude, are you sure you want to leave? Think of the kittens!";
+    }
+</script>
+{% endif %}
+
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+</body>
+</html>

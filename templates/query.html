@@ -1,0 +1,141 @@
+{% extends 'home.html' %}
+
+
+{% block title %}
+Query
+{% endblock %}
+
+
+{% block content  %}
+
+<nav class="navbar navbar-expand-md bg-dark navbar-dark">
+    <a class="navbar-brand" href="{{ url_for('impact') }}">
+        <img src="{{ url_for('static', filename='IMPACT.png') }}" alt="Logo" style="width:90px;">
+    </a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="collapsibleNavbar">
+        <ul class="navbar-nav">
+        {% if matches %}
+            <li class="nav-item">
+                <a class="nav-link disabled" href="#results_{{ matches|count }}">Results {{ matches|count }}</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{{url_for('json_dwld')}}">Download results as JSON</a>
+            </li>
+        {% endif %}
+            <li class="nav-item">
+                <a class="nav-link" href="{{url_for('impact', scroll='history')}}">History</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{{url_for('impact', scroll='oos')}}">Out of scope</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{{url_for('impact', scroll='donate')}}">Donate</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{{url_for('impact', scroll='bot')}}">IMPACT Telegram bot</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{{url_for('impact', scroll='contact')}}">Contact</a>
+            </li>
+        </ul>
+    </div>  
+</nav>
+      
+<div class="container" >
+    {% if matches %}
+        {% for x in matches %}
+            <div class="card" style="margin-top: 15px;">
+                <div class="card-body" >
+                    <a target="_blank" href="{{x['url']}}" class="card-text visit" style=" font-size: large;font-weight: bold;">{{x['name']}}</a>
+                    <p class="card-text" style="color: black; font-weight: bold;">{{x['id']}}</p>
+                    <p style="text-indent: 25px;">
+                        <a target="_blank" href="{{x['JM']['url']}}" class="card-title" style="color: #060; font-size: large; font-weight: bold;">{{x['JM']['name']}}</a>
+                    </p>
+                    <p class="card-text" style="color: #32731c; font-weight: bold; text-indent: 50px;" >{{x['JM']['impact_factor']}}</p>
+                    <p class="card-text" style="color: #42623b; font-weight: bold; text-indent: 50px;" >{{x['JM']['eigenfactor']}}</p>
+                    <p class="card-text" style="color: #2e412a; font-weight: bold; text-indent: 50px;" >{{x['JM']['influence_score']}}</p>
+                    <a  target="_blank" href="{{x['ref_url']}}" class="card-title" style=" color: goldenrod; font-size: large;font-weight: bold;">REFERENCES</a>
+                </div>
+            </div>
+        {% endfor %}
+    {% endif %}
+    <div class="card" style="margin-top: 15px;">
+        <div class="card-body">
+            <p style="color: black; font-weight: bold;" class="card-title">Tip</p>
+            <p class="card-text" style="color: black;">To improve your query results try to put only one autor last name.</p>
+            <br>
+            <p class="card-text" style="color: black; font-weight: bold;">Example: on autor field type "Pan" or "Yang" instead "S. J. Pan and Q. Yang"</p>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="exampleModal1" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+    <div class="modal-content">
+        <div class="modal-header" style="background-color: #343a40!important;">
+        <h5 style="color: rgba(255,255,255,.5);" class="modal-title" id="exampleModalLabel">Query</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        </div>
+        <div class="modal-body">
+            <p style="color: black;">Look for the mayority of Articles <a style="color: black;" href="{{url_for('impact', scroll='oos')}}">(also see out of scope)</a> on IEEE Journals & Magazines that referenced your excecuted query.</p>
+            {% from 'macro.html' import mostrar_fields %}
+            <form  method="POST" >
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                {{ mostrar_fields(query_form.autor, class='form-control') }}
+                {{ mostrar_fields(query_form.title, class='form-control') }}
+                {{ mostrar_fields(query_form.year, class='form-control') }}
+                {{ query_form.honeypot }}
+                <div class="container">
+                    <div class="row">
+                        <div class="col text-center">
+                            <button  onclick="loading();" class="btn btn-dark"  type="submit"  style="width: 200px; color: rgba(255,255,255,.5);">Execute</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer"  style="background-color: #343a40!important;">
+        <button type="button" class="btn btn-dark" style="color: rgba(255,255,255,.5);" data-dismiss="modal">Close</button>
+        </div>
+    </div>
+    </div>
+</div>
+
+<footer  style="margin-left: 0; text-align: center; position: sticky; bottom: 0; width: 100%; background-color: #343a40!important;">
+    <br>
+    <br>
+    <button  id="myInput1" type="button" class="btn btn-dark" style="color: rgba(255,255,255,.5);" data-toggle="modal" data-target="#exampleModal1">
+        Query
+    </button>
+    <br>
+    <br>
+    <br>
+</footer>
+<script type="text/javascript">
+    $('#exampleModal1').on('shown.bs.modal', function () {
+        $('#myInput1').trigger('focus')
+        })
+</script>
+<script type="text/javascript">
+    function loading(){
+        $("#loading").show();
+        $("#content").hide(); 
+    }
+</script>
+<script type="text/javascript">
+document.addEventListener("readystatechange", function(){
+    if(document.readyState === "loading" | document.readyState === "interactive") {
+    $("#loading").show();
+    $("#content").hide();
+    }else{
+    $("#loading").hide();
+    $("#content").show();
+    }
+});
+</script>
+{% endblock %}

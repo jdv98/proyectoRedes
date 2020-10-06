@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Bootstrap CSS CDN -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
+
+    <link rel="icon" href="{{ url_for('static', filename='IMPACT.png') }}">
+    <title>Error</title>
+
+    <style>
+        .center {
+        margin: 0;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        -ms-transform: translate(-50%, -50%);
+        transform: translate(-50%, -50%);
+        }
+    </style>
+    <style>
+        .impact_text{
+            text-align: justify;
+            text-justify: inter-word;
+            color: rgba(255,255,255,.5);
+        }
+    </style>
+</head>
+<body style="text-align: center; background-color: #343a40!important;">
+
+    <div class="center" >
+        <hr>
+        <h1 class="impact_text">Please try again!</h1>
+        <br>
+        <div class="container" style="width: 200px; height: 200px; background-image: url(/static/IMPACT.png); background-position: center; background-size: 200px; background-repeat: no-repeat;">
+
+        </div>
+        <p  class="impact_text"><i>I am really sorry!</i></p>
+        <hr>
+    </div>
+    
+</body>
+</html>
