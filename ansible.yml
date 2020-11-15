@@ -1,0 +1,156 @@
+---
+  - name: "Proyecto redes"
+    hosts: localhost
+    connection: local
+    tasks:
+    
+    #CentOS
+
+    - name: "Installing bases CentOS"
+      yum:
+        name: 
+          - git
+          - yum-utils
+        update_cache: yes
+      when:
+        - ansible_facts['distribution']=="CentOS"
+
+    #Agrega el repositorio
+    - name: "Preparando Centos para docker"
+      shell: "yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo"
+      when:
+        - ansible_facts['distribution']=="CentOS"
+    
+    - name: "Update yum"
+      yum:
+        update_cache: yes
+      when:
+        - ansible_facts['distribution']=="CentOS"
+
+    - name: "install docker CentOS"
+      yum:
+        name:
+          - docker-ce
+          - docker-ce-cli
+          - containerd.io
+      async: 1000
+      poll: 0
+      register: yumRegister
+      when:
+        - ansible_facts['distribution']=="CentOS"
+    
+    - name: "Checking yum"
+      async_status:
+        jid: "{{ yumRegister.ansible_job_id }}"
+      register: yumResult
+      until: yumResult.finished
+      retries: 100
+      delay: 10
+      when:
+        - ansible_facts['distribution']=="CentOS"
+
+    - name: "Iniciar docker"
+      shell: systemctl start docker
+      when:
+        - ansible_facts['distribution']=="CentOS"
+
+
+    #Debian
+
+    - name: "Instalando bases Debian"
+      apt:
+        name:
+          - git
+          - apt-transport-https
+          - ca-certificates
+          - curl
+          - gnupg-agent
+          - software-properties-common
+        install_recommends: yes
+        update_cache: yes
+      when:
+        - ansible_facts['distribution']=="Debian"
+
+    - name: "Llaves para repositorio docker Debian"
+      shell: "curl -fsSL https://download.docker.com/linux/debian/gpg | sudo apt-key add -"
+      when:
+        - ansible_facts['distribution']=="Debian"
+
+    - name: "Add-key debian"
+      shell: apt-key fingerprint 0EBFCD88
+      when:
+        - ansible_facts['distribution']=="Debian"
+
+    - name: "Agregar a docker repositorio apt"
+      shell:
+          cmd: |
+              add-apt-repository "deb [arch=$(dpkg --print-architecture)] https://download.docker.com/linux/debian $(lsb_release -cs) stable"
+      when:
+        - ansible_facts['distribution']=="Debian"
+
+    - name: "Clonar repositorio en Gitlab"
+      git:
+        repo: 'http://35.184.127.10:9668/jdvp98/proyecto_redes.git'
+        dest: ./ProyectoRedes
+
+    - name: "Update apt"
+      apt:
+        update_cache: yes
+      when:
+        - ansible_facts['distribution']=="Debian"
+
+    - name: "install docker debian"
+      apt:
+        name:
+          - docker-ce
+          - docker-ce-cli
+          - containerd.io
+        install_recommends: yes
+      async: 1000
+      poll: 0
+      register: aptDockerCE
+      when:
+        - ansible_facts['distribution']=="Debian"
+
+    - name: "Checking apt"
+      async_status:
+        jid: "{{ aptDockerCE.ansible_job_id }}"
+      register: aptDockerCEResult
+      until: aptDockerCEResult.finished
+      retries: 100
+      delay: 10
+      when:
+        - ansible_facts['distribution']=='Debian'
+
+
+    #Debian y CentOS
+    
+    - name: "Instalar pip"
+      command: "{{item}}"
+      with_items:
+      - curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
+      - python get-pip.py
+
+    - name: "docker compose"
+      pip: 
+        name:
+          - docker
+          - docker-compose
+      when: (ansible_facts['distribution']=="Debian") or
+            (ansible_facts['distribution']=="CentOS")
+      
+    - name: "Run docker compose"
+      docker_compose:
+        project_src: ./ProyectoRedes
+        build: yes
+      async: 1000
+      poll: 0
+      register: dcStatus
+
+    - name: "Checking docker compose build"
+      async_status:
+        jid: "{{ dcStatus.ansible_job_id }}"
+      register: dcResult
+      until: dcResult.finished
+      retries: 100
+      delay: 10
